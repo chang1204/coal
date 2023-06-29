@@ -1,0 +1,6 @@
+<launch>
+    <!-- Run the localization node -->
+    <node pkg="dump_extract" type="extract_node" name="extract_node" output="screen" />
+
+</launch>
+   

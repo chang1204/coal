@@ -1,0 +1,6 @@
+Log file created at: 2022/11/02 22:25:53
+Running on machine: chang-Dell-G15-5511
+Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
+I1102 22:25:53.998983 274484 coal_demo01.cpp:676] info
+W1102 22:25:53.999064 274484 coal_demo01.cpp:677] warning
+E1102 22:25:53.999079 274484 coal_demo01.cpp:678] error
