@@ -39,7 +39,7 @@ void getFileName(const std::string & path,std::vector<std::string>& files )
     closedir(dir);
 }
  
-int main(int argc,char** ragv)
+int main(int argc,char** argv)
 {
     vector<string> fileNames;
     int i = 0;

@@ -15,6 +15,7 @@ add_message_files(
   test.msg
   sensorDataReception.msg
   chassisControl.msg
+  udpControl.msg
   # Message2.msg
 )
 
