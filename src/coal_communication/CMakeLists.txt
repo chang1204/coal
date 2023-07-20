@@ -33,3 +33,9 @@ target_link_libraries(udp_sub
 ${catkin_LIBRARIES} 
 yaml-cpp
 )
+
+add_executable(udp_test src/udp_test.cpp)
+target_link_libraries(udp_test 
+${catkin_LIBRARIES} 
+yaml-cpp
+)
