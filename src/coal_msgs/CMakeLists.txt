@@ -16,6 +16,8 @@ add_message_files(
   sensorDataReception.msg
   chassisControl.msg
   udpControl.msg
+  keyboard2udp.msg
+  udp2uart.msg
   # Message2.msg
 )
 

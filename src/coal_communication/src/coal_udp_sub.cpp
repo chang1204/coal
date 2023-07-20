@@ -4,18 +4,24 @@
 #include <std_msgs/String.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
-#include "coal_msgs/udpControl.h"
+
 #include <chrono>
 
-void udpCallBack(const std_msgs::String::ConstPtr& msg){
-    ROS_INFO("Received UDP message: %s", msg->data.c_str());
-}
+// 自定义消息类型
+#include "coal_msgs/udp2uart.h"
+
+coal_msgs::udp2uart udp2uart_msg;
+
+// void udpCallBack(const std_msgs::String::ConstPtr& msg){
+//     ROS_INFO("Received UDP message: %s", msg->data.c_str());
+// }
 
 int main (int argc , char* argv[]){
 
     ros::init(argc , argv , "coal_udp_sub");
     ros::NodeHandle udp_nh;
-    ros::Subscriber udp_sub = udp_nh.subscribe<std_msgs::String>("udp_pub" , 10, udpCallBack);
+    // ros::Subscriber udp_sub = udp_nh.subscribe<std_msgs::String>("udp_pub" , 10, udpCallBack);
+    ros::Publisher udp_pub = udp_nh.advertise<coal_msgs::udp2uart>("udp2uart" , 10);
 
     std::string pkg_path = ros::package::getPath("coal_communication");
     YAML::Node config = YAML::LoadFile(pkg_path + "/yaml/coal_com.yaml");
@@ -47,20 +53,19 @@ int main (int argc , char* argv[]){
     }
     struct sockaddr_in server_addr;
     int buff[1024];
-    coal_msgs::udpControl udp_msg;
 
     while(ros::ok()){
         float udp_control_array[6];
         int recv_num = recvfrom(sock_fd,udp_control_array,4 * sizeof(udp_control_array),0,(struct sockaddr*)&server_addr,(socklen_t*)&len);
         if(recv_num > 0){
             printf("receive success, recv_num = %d\n", recv_num);
-            udp_msg.chassisSpeed1 = udp_control_array[0];
-            udp_msg.chassisSpeed2 = udp_control_array[1];
-            udp_msg.chassisSpeed3 = udp_control_array[2];
-            udp_msg.chassisSpeed4 = udp_control_array[3];
-            udp_msg.waistAngle = udp_control_array[4];
-            udp_msg.basketControl = udp_control_array[5];
-
+            udp2uart_msg.chassisSpeed1 = udp_control_array[0];
+            udp2uart_msg.chassisSpeed2 = udp_control_array[1];
+            udp2uart_msg.chassisSpeed3 = udp_control_array[2];
+            udp2uart_msg.chassisSpeed4 = udp_control_array[3];
+            udp2uart_msg.waistAngle = udp_control_array[4];
+            udp2uart_msg.basketControl = udp_control_array[5];
+            udp_pub.publish(udp2uart_msg);
         }
 
     }

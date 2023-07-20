@@ -49,8 +49,18 @@ void coal_uart::uartDeviceConfig(){
 }
 
 void coal_uart::msgFlowConfig(){
+    // 50hz定时器
     cmdTimer = n.createTimer(ros::Duration(0.02), &coal_uart::controlCmdSendCallback, this);
+    keyboard_sub = n.subscribe("coal_keyboard", 10, &coal_uart::keyboardCallback, this);
+}
 
+void coal_uart::keyboardCallback(const coal_msgs::keyboard2uart::ConstPtr &msg){
+    chassisControl.chassisSpeed1 = msg->chassisSpeed1;
+    chassisControl.chassisSpeed2 = msg->chassisSpeed2;
+    chassisControl.chassisSpeed3 = msg->chassisSpeed3;
+    chassisControl.chassisSpeed4 = msg->chassisSpeed4;
+    chassisControl.waistAngle = msg->waistAngle;
+    chassisControl.basketControl = msg->basketControl;
 }
 
 void coal_uart::controlCmdSendCallback(const ros::TimerEvent &event){
@@ -75,6 +85,8 @@ void coal_uart::controlCmdSendCallback(const ros::TimerEvent &event){
         controlCommand[8] = (int)((chassisControl.chassisSpeed4 + 4.000f) * 1000) >> 8;
         controlCommand[9] = (int)((chassisControl.chassisSpeed4 + 4.000f) * 1000) & 0xff;
 
+        std::cout<<chassisControl.chassisSpeed1<<std::endl;
+        
         controlCommand[10] = (int)((chassisControl.waistAngle + 180.0f) * 100) >> 8;
         controlCommand[11] = (int)((chassisControl.waistAngle + 180.0f) * 100) & 0xff;
 

@@ -1,6 +1,8 @@
 #include <ros/ros.h>
 #include <termios.h>
+#include "coal_msgs/keyboard2udp.h"
 #include "coal_msgs/udpControl.h"
+
 int getch()
 {
     static struct termios oldt, newt;
@@ -18,11 +20,11 @@ int getch()
 int main(int argc , char* argv[]){
     ros::init(argc, argv, "key_test");
     ros::NodeHandle keyboard_nh;
-    ros::Publisher keyboard_pub = keyboard_nh.advertise<coal_msgs::udpControl>("udp_pub", 10);
+    ros::Publisher keyboard_pub = keyboard_nh.advertise<coal_msgs::keyboard2udp>("coal_keyboard", 10);
 
     ros::Rate loop_rate(10);
 
-    coal_msgs::udpControl twist_msg;
+    coal_msgs::keyboard2udp twist_msg;
     while(ros::ok()){
         int c = getch();
         // std::cout<<c<<std::endl;
@@ -56,6 +58,7 @@ int main(int argc , char* argv[]){
         }
         keyboard_pub.publish(twist_msg);
         std::cout<<twist_msg.chassisSpeed1<<std::endl;
+
         ros::spinOnce();
         loop_rate.sleep();
 

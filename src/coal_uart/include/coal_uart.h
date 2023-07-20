@@ -12,6 +12,9 @@ using json = nlohmann::json;
 //自定义消息类型
 #include "coal_msgs/sensorDataReception.h"
 #include "coal_msgs/chassisControl.h"
+#include "coal_msgs/udpControl.h"
+#include "coal_msgs/keyboard2uart.h"
+
 #define RX_LENGTH   30   //接收数据长度
 
 #include "fontColor.h";
@@ -36,7 +39,7 @@ class coal_uart
     void unixTimeRecord(void);
     //--终端tag
     void displayTag(char str);
-
+    void keyboardCallback(const coal_msgs::keyboard2uart::ConstPtr &msg);
     json param;
     //--串口缓冲区
     deque<uint8_t> uartBuffer;
@@ -54,7 +57,10 @@ class coal_uart
 
     //控制指令定时器
     ros::Timer cmdTimer;
+    ros::Subscriber keyboard_sub;
     void controlCmdSendCallback(const ros::TimerEvent &);
     coal_msgs::sensorDataReception sensorDataReception;
     coal_msgs::chassisControl chassisControl;
+    coal_msgs::udpControl udpControl;
+    coal_msgs::keyboard2uart keyboard2uart;
 };

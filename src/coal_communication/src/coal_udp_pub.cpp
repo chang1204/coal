@@ -5,14 +5,26 @@
 #include <std_msgs/UInt8MultiArray.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
-#include "coal_msgs/udpControl.h"
+
 #include <chrono>
+// 自定义消息类型
+#include "coal_msgs/keyboard2udp.h"
+
+coal_msgs::keyboard2udp keyboard2udp_msg;
+void udpCallBack(const coal_msgs::keyboard2udp::ConstPtr& msg){
+    keyboard2udp_msg.chassisSpeed1 = msg->chassisSpeed1;
+    keyboard2udp_msg.chassisSpeed2 = msg->chassisSpeed2;
+    keyboard2udp_msg.chassisSpeed3 = msg->chassisSpeed3;
+    keyboard2udp_msg.chassisSpeed4 = msg->chassisSpeed4;
+    keyboard2udp_msg.waistAngle = msg->waistAngle;
+    keyboard2udp_msg.basketControl = msg->basketControl;
+}
 
 int main(int argc , char * argv[]){
     ros::init(argc , argv , "coal_udp_pub");
     ros::NodeHandle udp_nh;
-    // ros::Publisher udp_pub = udp_nh.advertise<coal_msgs::udpControl>("udp_pub" , 10); 
-    // ros::Publisher udp_pub = udp_nh.advertise<std_msgs::String>("udp_pub" , 10); 
+
+    ros::Subscriber udp_sub = udp_nh.subscribe<coal_msgs::keyboard2udp>("coal_keyboard" , 10, udpCallBack);
 
     std::string pkg_path = ros::package::getPath("coal_communication");
     YAML::Node config = YAML::LoadFile(pkg_path + "/yaml/coal_com.yaml");
@@ -37,18 +49,12 @@ int main(int argc , char * argv[]){
     int len = sizeof(addr_serv);
 
 
-    coal_msgs::udpControl udp_msg;
+
     // std_msgs::String msg;
 
     std_msgs::UInt8MultiArray msg;
     msg.data.resize(sizeof(int));
 
-    udp_msg.chassisSpeed1 = 10.0;
-    udp_msg.chassisSpeed2 = 10;
-    udp_msg.chassisSpeed3 = 10;
-    udp_msg.chassisSpeed4 = 10;
-    udp_msg.waistAngle = 10.0;
-    udp_msg.basketControl = 1.0;
     ros::Rate rate(1);
 
     while (ros::ok())
@@ -58,12 +64,12 @@ int main(int argc , char * argv[]){
         auto timeSatrt = std::chrono::steady_clock::now();
 
         float udp_control_array[6];
-        udp_control_array[0] = udp_msg.chassisSpeed1;
-        udp_control_array[1] = udp_msg.chassisSpeed2;
-        udp_control_array[2] = udp_msg.chassisSpeed3;
-        udp_control_array[3] = udp_msg.chassisSpeed4;
-        udp_control_array[4] = udp_msg.waistAngle;
-        udp_control_array[5] = udp_msg.basketControl;
+        udp_control_array[0] = keyboard2udp_msg.chassisSpeed1;
+        udp_control_array[1] = keyboard2udp_msg.chassisSpeed2;
+        udp_control_array[2] = keyboard2udp_msg.chassisSpeed3;
+        udp_control_array[3] = keyboard2udp_msg.chassisSpeed4;
+        udp_control_array[4] = keyboard2udp_msg.waistAngle;
+        udp_control_array[5] = keyboard2udp_msg.basketControl;
 
         // 定义发送数组和发送标志位
         int send_num;
@@ -83,8 +89,8 @@ int main(int argc , char * argv[]){
         double timeDelay = (1000 - timeDuration / 1000) / 1000; // 20ms 50hz
         if (timeDelay < 0)
         {
-            printf("%s \n", "程序运行时间超出规定频率50hz! ");
-            exit(0);
+            std::cout << "程序运行时间超出规定频率50hz! "<< std::endl;
+            return -1;
         }
         // rostopic hz /你的话题    结果在49.5hz左右即可
         ros::Duration(timeDelay).sleep();
