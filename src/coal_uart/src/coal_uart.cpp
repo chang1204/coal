@@ -51,7 +51,7 @@ void coal_uart::uartDeviceConfig(){
 void coal_uart::msgFlowConfig(){
     // 50hz定时器
     cmdTimer = n.createTimer(ros::Duration(0.02), &coal_uart::controlCmdSendCallback, this);
-    keyboard_sub = n.subscribe("coal_keyboard", 10, &coal_uart::keyboardCallback, this);
+    keyboard_sub = n.subscribe("udp2uart", 10, &coal_uart::keyboardCallback, this);
 }
 
 void coal_uart::keyboardCallback(const coal_msgs::udp2uart::ConstPtr &msg){
@@ -61,6 +61,7 @@ void coal_uart::keyboardCallback(const coal_msgs::udp2uart::ConstPtr &msg){
     udp2uart.chassisSpeed4 = msg->chassisSpeed4;
     udp2uart.waistAngle = msg->waistAngle;
     udp2uart.basketControl = msg->basketControl;
+    std::cout<<udp2uart.chassisSpeed1<<std::endl;
 }
 
 void coal_uart::controlCmdSendCallback(const ros::TimerEvent &event){
@@ -85,7 +86,7 @@ void coal_uart::controlCmdSendCallback(const ros::TimerEvent &event){
         controlCommand[8] = (int)((udp2uart.chassisSpeed4 + 4.000f) * 1000) >> 8;
         controlCommand[9] = (int)((udp2uart.chassisSpeed4 + 4.000f) * 1000) & 0xff;
 
-        std::cout<<udp2uart.chassisSpeed1<<std::endl;
+        // std::cout<<udp2uart.chassisSpeed1<<std::endl;
 
         controlCommand[10] = (int)((udp2uart.waistAngle + 180.0f) * 100) >> 8;
         controlCommand[11] = (int)((udp2uart.waistAngle + 180.0f) * 100) & 0xff;
@@ -207,7 +208,7 @@ void coal_uart::analyzePackage(){
     sensorDataReception.chassisSpeed3 = (float)((uartBuffer[6] << 8 | uartBuffer[7]) - 4000) / 1000.0f;
     sensorDataReception.chassisSpeed4 = (float)((uartBuffer[8] << 8 | uartBuffer[9]) - 4000) / 1000.0f;
     sensorDataReception.waistAngle = (float)((uartBuffer[10] << 8 | uartBuffer[11]) - 18000) / 100.0f;
-    cout<<sensorDataReception.chassisSpeed1<<" "<<sensorDataReception.chassisSpeed2<<" "<<sensorDataReception.chassisSpeed3<<" "<<sensorDataReception.chassisSpeed4<<" "<<sensorDataReception.waistAngle<<endl;
+    // cout<<sensorDataReception.chassisSpeed1<<" "<<sensorDataReception.chassisSpeed2<<" "<<sensorDataReception.chassisSpeed3<<" "<<sensorDataReception.chassisSpeed4<<" "<<sensorDataReception.waistAngle<<endl;
 }
 
 void coal_uart::unixTimeRecord()

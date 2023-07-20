@@ -1,13 +1,16 @@
 # 发送的对方端口号
-DESTINATION_PORT: 6879
+
 # 对方的IP 
 # 笔记本
 # DESTINATION_IP: '219.216.98.90'
+# DESTINATION_PORT: 6879
+# LOCAL_PORT: 6879
 # nuc 
 DESTINATION_IP: '219.216.98.58'
-
-# 本机端口号
+DESTINATION_PORT: 6879
 LOCAL_PORT: 6879
+# 本机端口号
+
 
 # 主机ip ： 172.20.10.4 端口 ： 4163
 # 笔记本ip ： 172.20.10.2 端口 ： 4163

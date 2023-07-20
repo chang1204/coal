@@ -65,6 +65,7 @@ int main (int argc , char* argv[]){
             udp2uart_msg.chassisSpeed4 = udp_control_array[3];
             udp2uart_msg.waistAngle = udp_control_array[4];
             udp2uart_msg.basketControl = udp_control_array[5];
+            std::cout<<udp2uart_msg.chassisSpeed1<<std::endl;
             udp_pub.publish(udp2uart_msg);
         }
 
