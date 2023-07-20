@@ -54,13 +54,13 @@ void coal_uart::msgFlowConfig(){
     keyboard_sub = n.subscribe("coal_keyboard", 10, &coal_uart::keyboardCallback, this);
 }
 
-void coal_uart::keyboardCallback(const coal_msgs::keyboard2uart::ConstPtr &msg){
-    chassisControl.chassisSpeed1 = msg->chassisSpeed1;
-    chassisControl.chassisSpeed2 = msg->chassisSpeed2;
-    chassisControl.chassisSpeed3 = msg->chassisSpeed3;
-    chassisControl.chassisSpeed4 = msg->chassisSpeed4;
-    chassisControl.waistAngle = msg->waistAngle;
-    chassisControl.basketControl = msg->basketControl;
+void coal_uart::keyboardCallback(const coal_msgs::udp2uart::ConstPtr &msg){
+    udp2uart.chassisSpeed1 = msg->chassisSpeed1;
+    udp2uart.chassisSpeed2 = msg->chassisSpeed2;
+    udp2uart.chassisSpeed3 = msg->chassisSpeed3;
+    udp2uart.chassisSpeed4 = msg->chassisSpeed4;
+    udp2uart.waistAngle = msg->waistAngle;
+    udp2uart.basketControl = msg->basketControl;
 }
 
 void coal_uart::controlCmdSendCallback(const ros::TimerEvent &event){
@@ -74,24 +74,24 @@ void coal_uart::controlCmdSendCallback(const ros::TimerEvent &event){
         controlCommand[1] = 0xfc;
         //--[2,3]控制指令
         // chassisControl.chassisSpeed1 = 1.0f;
-        chassisControl.chassisSpeed2 = 0.0f;
+        // chassisControl.chassisSpeed2 = 0.0f;
         // chassisControl.chassisSpeed3 = -0.5f;
-        controlCommand[2] = (int)((chassisControl.chassisSpeed1 + 4.000f) * 1000) >> 8;
-        controlCommand[3] = (int)((chassisControl.chassisSpeed1 + 4.000f) * 1000) & 0xff;
-        controlCommand[4] = (int)((chassisControl.chassisSpeed2 + 4.000f) * 1000) >> 8;
-        controlCommand[5] = (int)((chassisControl.chassisSpeed2 + 4.000f) * 1000) & 0xff;
-        controlCommand[6] = (int)((chassisControl.chassisSpeed3 + 4.000f) * 1000) >> 8;
-        controlCommand[7] = (int)((chassisControl.chassisSpeed3 + 4.000f) * 1000) & 0xff;
-        controlCommand[8] = (int)((chassisControl.chassisSpeed4 + 4.000f) * 1000) >> 8;
-        controlCommand[9] = (int)((chassisControl.chassisSpeed4 + 4.000f) * 1000) & 0xff;
+        controlCommand[2] = (int)((udp2uart.chassisSpeed1 + 4.000f) * 1000) >> 8;
+        controlCommand[3] = (int)((udp2uart.chassisSpeed1 + 4.000f) * 1000) & 0xff;
+        controlCommand[4] = (int)((udp2uart.chassisSpeed2 + 4.000f) * 1000) >> 8;
+        controlCommand[5] = (int)((udp2uart.chassisSpeed2 + 4.000f) * 1000) & 0xff;
+        controlCommand[6] = (int)((udp2uart.chassisSpeed3 + 4.000f) * 1000) >> 8;
+        controlCommand[7] = (int)((udp2uart.chassisSpeed3 + 4.000f) * 1000) & 0xff;
+        controlCommand[8] = (int)((udp2uart.chassisSpeed4 + 4.000f) * 1000) >> 8;
+        controlCommand[9] = (int)((udp2uart.chassisSpeed4 + 4.000f) * 1000) & 0xff;
 
-        std::cout<<chassisControl.chassisSpeed1<<std::endl;
-        
-        controlCommand[10] = (int)((chassisControl.waistAngle + 180.0f) * 100) >> 8;
-        controlCommand[11] = (int)((chassisControl.waistAngle + 180.0f) * 100) & 0xff;
+        std::cout<<udp2uart.chassisSpeed1<<std::endl;
 
-        controlCommand[12] = chassisControl.basketControl >> 8;
-        controlCommand[13] = chassisControl.basketControl & 0xff;
+        controlCommand[10] = (int)((udp2uart.waistAngle + 180.0f) * 100) >> 8;
+        controlCommand[11] = (int)((udp2uart.waistAngle + 180.0f) * 100) & 0xff;
+
+        controlCommand[12] = udp2uart.basketControl >> 8;
+        controlCommand[13] = udp2uart.basketControl & 0xff;
         
         controlCommand[14] = 0x00;
         controlCommand[15] = 0x00;
