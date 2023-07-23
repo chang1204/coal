@@ -13,6 +13,8 @@ using json = nlohmann::json;
 #include "coal_msgs/sensorDataReception.h"
 #include "coal_msgs/udp2uart.h"
 
+#include "coal_msgs/keyboard2udp.h"
+
 #define RX_LENGTH   30   //接收数据长度
 
 #include "fontColor.h";
@@ -38,6 +40,8 @@ class coal_uart
     //--终端tag
     void displayTag(char str);
     void keyboardCallback(const coal_msgs::udp2uart::ConstPtr &msg);
+    void uartCallback(const coal_msgs::keyboard2udp::ConstPtr &msg);
+
     json param;
     //--串口缓冲区
     deque<uint8_t> uartBuffer;
@@ -56,7 +60,9 @@ class coal_uart
     //控制指令定时器
     ros::Timer cmdTimer;
     ros::Subscriber keyboard_sub;
-    void controlCmdSendCallback(const ros::TimerEvent &);
-    coal_msgs::sensorDataReception sensorDataReception;
+    ros::Subscriber uart_sub;
+    void controlCmdSendCallback(const ros::TimerEvent &event);
+    coal_msgs::keyboard2udp keyboard2udp;
     coal_msgs::udp2uart udp2uart;
+    coal_msgs::sensorDataReception sensorDataReception;
 };
