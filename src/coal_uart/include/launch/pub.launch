@@ -1,0 +1,4 @@
+<launch>
+        <node pkg="coal_keyboard" type="coal_keyboard" name="coal_keyboard" output="screen"/>
+        <node pkg="coal_communication" type="udp_sub" name="udp_sub" output="screen"/>
+</launch>

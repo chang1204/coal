@@ -1,0 +1,5 @@
+<launch>
+    <node pkg="coal_communication" type="udp_sub" name="udp_sub" output="screen"/>
+    <node pkg="coal_uart" type="uart_node" name="uart_node" output="screen"/>
+
+</launch>
