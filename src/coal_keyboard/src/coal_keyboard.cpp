@@ -48,12 +48,25 @@ int main(int argc , char* argv[]){
             case 'd':
                 twist_msg.waistAngle = -1.0;
                 break;
+            case 'u':
+                twist_msg.basketControl = 1;
+                break;
+            case 'i':
+                twist_msg.basketControl = 2;
+                break;
+            case 'j':
+                twist_msg.basketControl = 1>>4;
+                break;
+            case 'k':
+                twist_msg.basketControl = 2>>4;
+                break;
             default:
                 twist_msg.chassisSpeed1 = 0.0;
                 twist_msg.chassisSpeed2 = 0.0;
                 twist_msg.chassisSpeed3 = 0.0;
                 twist_msg.chassisSpeed4 = 0.0;
                 twist_msg.waistAngle = 0.0;
+                twist_msg.basketControl = 0;
                 break;
         }
         keyboard_pub.publish(twist_msg);
