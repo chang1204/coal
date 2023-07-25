@@ -63,6 +63,7 @@ void coal_uart::uartCallback(const coal_msgs::keyboard2udp::ConstPtr &msg){
     udp2uart.chassisSpeed4 = msg->chassisSpeed4;
     udp2uart.waistAngle = msg->waistAngle;
     udp2uart.basketControl = msg->basketControl;
+    // std::cout<<msg->waistAngle<<std::endl;
 
 }
 void coal_uart::keyboardCallback(const coal_msgs::udp2uart::ConstPtr &msg){
@@ -99,10 +100,9 @@ void coal_uart::controlCmdSendCallback(const ros::TimerEvent &event){
 
         controlCommand[10] = (int)((udp2uart.waistAngle + 180.0f) * 100) >> 8;
         controlCommand[11] = (int)((udp2uart.waistAngle + 180.0f) * 100) & 0xff;
-
-        std::cout<<udp2uart.chassisSpeed1<<" "<<udp2uart.chassisSpeed2<<" "<<udp2uart.chassisSpeed3<<" "<<udp2uart.chassisSpeed4<<" "<<udp2uart.waistAngle<<std::endl;
-
         controlCommand[12] = udp2uart.basketControl;
+
+        std::cout<<udp2uart.chassisSpeed1<<" "<<udp2uart.chassisSpeed2<<" "<<udp2uart.chassisSpeed3<<" "<<udp2uart.chassisSpeed4<<" "<<udp2uart.waistAngle<<" "<<(float)udp2uart.basketControl<<std::endl;
         controlCommand[13] = 0x00;
         // controlCommand[12] = udp2uart.basketControl >> 8;
         // controlCommand[13] = udp2uart.basketControl & 0xff;

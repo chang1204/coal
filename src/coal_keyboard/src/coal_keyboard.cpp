@@ -55,10 +55,10 @@ int main(int argc , char* argv[]){
                 twist_msg.basketControl = 2;
                 break;
             case 'j':
-                twist_msg.basketControl = 1>>4;
+                twist_msg.basketControl = 4;
                 break;
             case 'k':
-                twist_msg.basketControl = 2>>4;
+                twist_msg.basketControl = 8;
                 break;
             default:
                 twist_msg.chassisSpeed1 = 0.0;
@@ -70,7 +70,7 @@ int main(int argc , char* argv[]){
                 break;
         }
         keyboard_pub.publish(twist_msg);
-        std::cout<<twist_msg.chassisSpeed1<<std::endl;
+        std::cout<<twist_msg.basketControl<<std::endl;
 
         ros::spinOnce();
         loop_rate.sleep();

@@ -1,0 +1,4 @@
+<launch>
+        <node pkg="coal_keyboard" type="coal_keyboard" name="coal_keyboard" output="screen"/>
+        <node pkg="coal_uart" type="uart_node" name="uart_node" output="screen"/>
+</launch>
